@@ -56,6 +56,14 @@
 
     <!-- Begin page content -->
     <div class="container">
+      <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="#">TopView</a>
+        </a>
+      </nav>
+
+      <br>
+
       <div class="mt-1">
         <h1>Ticker Data</h1>
       </div>
