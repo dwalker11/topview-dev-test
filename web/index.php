@@ -1,7 +1,7 @@
 <?php
   // Remove later
-  ini_set('display_errors', true);
-  error_reporting(E_ALL);
+  // ini_set('display_errors', true);
+  // error_reporting(E_ALL);
 
   // fetch ticker data
   try {
@@ -39,6 +39,12 @@
     $tickerData = array_slice($tickerData, 0, ($limit ?: null));
   }
 
+  if (isset($_GET['json'])) {
+    header('Content-Type: application/json');
+    echo json_encode($tickerData);
+    exit(0);
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,31 +67,27 @@
         <h1>Ticker Data</h1>
       </div>
 
+      <hr>
+
       <div class="col-10">
         <form class="form-inline form-options-js">
-          <div class="form-group">
-            <label>
-              Order
-              <select class="form-control" id="exampleFormControlSelect1">
-                <option>15m</option>
-                <option>last</option>
-                <option>buy</option>
-                <option>sell</option>
-                <option>symbol</option>
-              </select>
-            </label>
-          </div>
-          <div class="form-group">
-            <label>
-              Limit
-              <input class="form-control" id="" placeholder="10">
-            </label>
-          </div>
+          <label>Order</label>&nbsp;
+          <select class="form-control order-input-js" id="exampleFormControlSelect1">
+            <option>15m</option>
+            <option>last</option>
+            <option>buy</option>
+            <option>sell</option>
+            <option>symbol</option>
+          </select>
+          &nbsp;&nbsp;
+          <label>Limit</label>&nbsp;
+          <input class="form-control limit-input-js" id="" placeholder="10">
+          &nbsp;&nbsp;
           <button type="submit" class="btn btn-primary">Refresh</button>
         </form>
       </div>
 
-      <br>
+      <hr>
 
       <div class="col-10">
         <div>
@@ -98,12 +100,12 @@
                 <?php endforeach; ?>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="ticker-body-js">
               <?php foreach ($tickerData as $denom => $ticker): ?>
                 <tr>
                   <td><?php echo $denom; ?></td>
                   <?php foreach ($ticker as $data): ?>
-                    <td><?php echo (is_numeric($data)) ? '$'.number_format($data, 2, '.', ',') : $data; ?></td>
+                    <td><?php echo $data; ?></td>
                   <?php endforeach; ?>
                 </tr>
               <?php endforeach; ?>
@@ -116,27 +118,46 @@
 
     <!-- Begin JavaScript
     ================================================== -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <script>
-      function updateTable(order, limit){
-        // get data
-        $.get();
-
-        // redraw table
-      }
-
       $(function(){
+        var order, limit;
+
+        function updateTable(orderParam, limitParam){
+          $.get('index.php', {order: orderParam, limit: limitParam, json: true}, null, 'json')
+          .done(function(results){
+            // rerender the table
+            var row;
+
+            $.each(results, function(key, val){
+              row += "<tr><td>" + key + "</td>";
+
+              for (var i in val) {
+                row += "<td>" + val[i] + "</td>";
+              }
+
+              row += "</tr>";
+            });
+
+            $(".ticker-body-js").empty().append(row);
+          });
+        }
+
         $('.order-js').on('click', function(){
-          // grab the elements value
-          updateTable();
+          order = $(this).text();
+
+          updateTable(order, limit);
         });
 
-        $('.form-options-js').on('click', function(e){
+        $('.form-options-js').on('submit', function(e){
           e.preventDefault();
-          // grab the selected options
-          updateTable();
+
+          order = $(".order-input-js").val();
+          limit = $(".limit-input-js").val();
+
+          updateTable(order, limit);
         });
       });
     </script>
