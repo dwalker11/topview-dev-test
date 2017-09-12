@@ -1,8 +1,4 @@
 <?php
-  // Remove later
-  // ini_set('display_errors', true);
-  // error_reporting(E_ALL);
-
   // fetch ticker data
   try {
     $sourceUrl  = "https://blockchain.info/ticker";
@@ -54,9 +50,6 @@
 
     <!-- Bootstrap styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-
-    <!-- Custom styles for this page -->
-    <link href="styles/main.css" rel="stylesheet"/>
   </head>
 
   <body>
