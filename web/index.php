@@ -40,12 +40,14 @@
   }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <title>TopView Blockchain Ticker</title>
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
     <!-- Custom styles for this page -->
     <link href="styles/main.css" rel="stylesheet"/>
@@ -54,37 +56,89 @@
   <body>
 
     <!-- Begin page content -->
-    <div>
-      <div>
+    <div class="container">
+      <div class="mt-1">
         <h1>Ticker Data</h1>
       </div>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <?php foreach ($tickerHeadings as $heading => $data): ?>
-                <th><?php echo $heading; ?></th>
-              <?php endforeach; ?>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($tickerData as $denom => $ticker): ?>
+
+      <div class="col-10">
+        <form class="form-inline form-options-js">
+          <div class="form-group">
+            <label>
+              Order
+              <select class="form-control" id="exampleFormControlSelect1">
+                <option>15m</option>
+                <option>last</option>
+                <option>buy</option>
+                <option>sell</option>
+                <option>symbol</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>
+              Limit
+              <input class="form-control" id="" placeholder="10">
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Refresh</button>
+        </form>
+      </div>
+
+      <br>
+
+      <div class="col-10">
+        <div>
+          <table class="table table-striped table-bordered">
+            <thead>
               <tr>
-                <td><?php echo $denom; ?></td>
-                <?php foreach ($ticker as $data): ?>
-                  <td><?php echo (is_numeric($data)) ? number_format($data, 2, '.', ',') : $data; ?></td>
+                <th></th>
+                <?php foreach ($tickerHeadings as $heading => $data): ?>
+                  <th><a href="#" class="order-js"><?php echo $heading; ?></a></th>
                 <?php endforeach; ?>
               </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php foreach ($tickerData as $denom => $ticker): ?>
+                <tr>
+                  <td><?php echo $denom; ?></td>
+                  <?php foreach ($ticker as $data): ?>
+                    <td><?php echo (is_numeric($data)) ? '$'.number_format($data, 2, '.', ',') : $data; ?></td>
+                  <?php endforeach; ?>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
 
     <!-- Begin JavaScript
     ================================================== -->
-    <script src="scripts/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script>
+      function updateTable(order, limit){
+        // get data
+        $.get();
+
+        // redraw table
+      }
+
+      $(function(){
+        $('.order-js').on('click', function(){
+          // grab the elements value
+          updateTable();
+        });
+
+        $('.form-options-js').on('click', function(e){
+          e.preventDefault();
+          // grab the selected options
+          updateTable();
+        });
+      });
+    </script>
   </body>
 </html>
