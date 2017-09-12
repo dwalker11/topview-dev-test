@@ -1,9 +1,10 @@
 <?php
-  // Application logic goes here
+  // Application logic
   try {
     $sourceUrl  = "https://blockchain.info/ticker";
     $tickerData = json_decode(file_get_contents($sourceUrl), true);
     $tickerData = $tickerData ?: [];
+    $tickerHeadings = current($tickerData);
   } catch (Exception $e) {
     echo "Oh no, something went wrong.";
     die();
@@ -29,9 +30,26 @@
         <h1>Ticker Data</h1>
       </div>
       <div>
-        <?php foreach ($tickerData as $ticker): ?>
-          <p><?php print_r($ticker); ?></p>
-        <?php endforeach; ?>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <?php foreach ($tickerHeadings as $heading => $data): ?>
+                <th><?php echo $heading; ?></th>
+              <?php endforeach; ?>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($tickerData as $denom => $ticker): ?>
+              <tr>
+                <td><?php echo $denom; ?></td>
+                <?php foreach ($ticker as $data): ?>
+                  <td><?php echo $data; ?></td>
+                <?php endforeach; ?>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
     </div>
 
